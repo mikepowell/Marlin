@@ -42,6 +42,7 @@
 #include "../../../core/serial.h"
 #include "../../../core/macros.h"
 #include "../../../gcode/queue.h"
+#include "../../../gcode/gcode.h"
 
 #include "../../../module/temperature.h"
 #include "../../../module/printcounter.h"
@@ -948,7 +949,7 @@ void Menu_Item_Handler(uint8_t menu, uint8_t item, bool draw/*=true*/) {
             Draw_Menu_Item(row, ICON_Temperature, (char*)"Reset Defaults");
           } else {
             settings.reset();
-            AudioFeedback();      
+            AudioFeedback();
           }
           break;
         case 7: // Info
@@ -1612,7 +1613,7 @@ void Popup_window_SaveLevel() {
 inline void Main_Menu_Control() {
   ENCODER_DiffState encoder_diffState = Encoder_ReceiveAnalyze();
   if (encoder_diffState == ENCODER_DIFF_NO) return;
-  if (encoder_diffState == ENCODER_DIFF_CW && selection < 3) { 
+  if (encoder_diffState == ENCODER_DIFF_CW && selection < 3) {
     selection++; // Select Down
     Main_Menu_Icons();
   }
@@ -1648,7 +1649,7 @@ inline void Main_Menu_Control() {
 inline void Menu_Control() {
   ENCODER_DiffState encoder_diffState = Encoder_ReceiveAnalyze();
   if (encoder_diffState == ENCODER_DIFF_NO) return;
-  if (encoder_diffState == ENCODER_DIFF_CW && selection < Get_Menu_Size(active_menu)) { 
+  if (encoder_diffState == ENCODER_DIFF_CW && selection < Get_Menu_Size(active_menu)) {
     DWIN_Draw_Rectangle(1, Color_Bg_Black, 0, MBASE(selection-scrollpos) - 18, 14, MBASE(selection-scrollpos) + 33);
     selection++; // Select Down
     if (selection > scrollpos+MROWS) {
@@ -1748,7 +1749,7 @@ inline void File_Control() {
     }
     return;
   }
-  if (encoder_diffState == ENCODER_DIFF_CW && selection < card.get_num_Files()) { 
+  if (encoder_diffState == ENCODER_DIFF_CW && selection < card.get_num_Files()) {
     DWIN_Draw_Rectangle(1, Color_Bg_Black, 0, MBASE(selection-scrollpos) - 18, 14, MBASE(selection-scrollpos) + 33);
     if (selection > 0) {
       DWIN_Draw_Rectangle(1, Color_Bg_Black, LBLX, MBASE(selection-scrollpos) - 14, 271, MBASE(selection-scrollpos) + 28);
@@ -1802,7 +1803,7 @@ inline void File_Control() {
 inline void Print_Screen_Control() {
   ENCODER_DiffState encoder_diffState = Encoder_ReceiveAnalyze();
   if (encoder_diffState == ENCODER_DIFF_NO) return;
-  if (encoder_diffState == ENCODER_DIFF_CW && selection < 2) { 
+  if (encoder_diffState == ENCODER_DIFF_CW && selection < 2) {
     selection++; // Select Down
     Print_Screen_Icons();
   }
@@ -1837,7 +1838,7 @@ inline void Print_Screen_Control() {
 inline void Popup_Control() {
   ENCODER_DiffState encoder_diffState = Encoder_ReceiveAnalyze();
   if (encoder_diffState == ENCODER_DIFF_NO) return;
-  if (encoder_diffState == ENCODER_DIFF_CW && selection < 1) { 
+  if (encoder_diffState == ENCODER_DIFF_CW && selection < 1) {
     selection++;
     Popup_Select();
   }
@@ -1870,7 +1871,7 @@ inline void Popup_Control() {
       case Stop:
         if (selection==0) {
           if (card.isPrinting) {
-          card.flag.abort_sd_printing = true; 
+          card.flag.abort_sd_printing = true;
           thermalManager.zero_fan_speeds();
           thermalManager.disable_all_heaters();
           } else {
@@ -1974,7 +1975,7 @@ void Host_Print_Stop() {
 }
 
 void Host_Print_Update(uint8_t percent, uint32_t remaining) {
-  printpercent = percent;  
+  printpercent = percent;
   remainingtime = remaining * 60;
   if (process == Print || process == Confirm) {
     Draw_Print_ProgressBar();
@@ -2040,7 +2041,7 @@ void Screen_Update() {
       }
     }
   }
-  
+
   switch(process) {
     case Main:
       Main_Menu_Control();
@@ -2081,7 +2082,7 @@ void HMI_Init() {
   #else
     zoffsetvalue = home_offset.z;
   #endif
-  
+
 }
 
 void HMI_StartFrame(const bool with_update) {
